@@ -7,6 +7,8 @@ public class BallMovement : MonoBehaviour
     [SerializeField] float horizontalSpeed = 5f;
     [SerializeField] float jumpForce = 10f;
     bool isGrounded;
+   public bool gameOver=false;
+    public GameObject gameoverPanel;
 
     // Reference to the slider for horizontal movement
     [SerializeField] Slider horizontalSlider;
@@ -15,10 +17,16 @@ public class BallMovement : MonoBehaviour
     Camera mainCamera;
     float minX, maxX;
 
+    AudioSource audioSource;
+    [SerializeField] AudioClip groundCollisionSound;
+
     void Start()
     {
+        Time.timeScale = 1;
+        gameoverPanel.SetActive(false);
         rb = GetComponent<Rigidbody>();
         mainCamera = Camera.main;
+        audioSource = GetComponent<AudioSource>();
 
         // Calculate screen bounds in world coordinates
         Vector3 screenMin = mainCamera.ViewportToWorldPoint(new Vector3(-10, -10, mainCamera.nearClipPlane));
@@ -52,6 +60,7 @@ public class BallMovement : MonoBehaviour
     {
         if (isGrounded)
         {
+
             Jump();
         }
     }
@@ -67,6 +76,19 @@ public class BallMovement : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true; // Set grounded true on collision with ground
+                               // Play collision sound
+            if (audioSource != null && groundCollisionSound != null)
+            {
+                audioSource.PlayOneShot(groundCollisionSound);
+            }
+        }
+
+        if (collision.gameObject.CompareTag("Finish"))
+        {
+            Time.timeScale = 0;
+            gameoverPanel.SetActive(true);
+            Debug.Log("groundhit");
+            gameOver = true;
         }
     }
 
