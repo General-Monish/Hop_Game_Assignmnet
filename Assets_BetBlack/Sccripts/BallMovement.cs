@@ -10,7 +10,7 @@ public class BallMovement : MonoBehaviour
    public bool gameOver=false;
     public GameObject gameoverPanel;
 
-    // Reference to the slider for horizontal movement
+    //  slider for horizontal movement
     [SerializeField] Slider horizontalSlider;
 
     // Camera reference to calculate screen bounds
@@ -28,7 +28,7 @@ public class BallMovement : MonoBehaviour
         mainCamera = Camera.main;
         audioSource = GetComponent<AudioSource>();
 
-        // Calculate screen bounds in world coordinates
+        // Calculate screen bounds in wold coordinats
         Vector3 screenMin = mainCamera.ViewportToWorldPoint(new Vector3(-10, -10, mainCamera.nearClipPlane));
         Vector3 screenMax = mainCamera.ViewportToWorldPoint(new Vector3(10, 10, mainCamera.nearClipPlane));
 
@@ -44,14 +44,14 @@ public class BallMovement : MonoBehaviour
 
     void MoveHorizontally()
     {
-        // Get horizontal input from the slider
+        //horizontal input from the slider
         float horizontalInput = horizontalSlider.value;
 
-        // Calculate movement based on input and current velocity
+        // Calculating movement based on input and current velocity
         Vector3 movement = new Vector3(horizontalInput * horizontalSpeed, rb.velocity.y, 0);
         rb.velocity = movement;
 
-        // Clamp position within screen bounds
+        // Clamping position within screen bounds
         float clampedX = Mathf.Clamp(transform.position.x, minX, maxX);
         transform.position = new Vector3(clampedX, transform.position.y, transform.position.z);
     }
@@ -68,15 +68,15 @@ public class BallMovement : MonoBehaviour
     void Jump()
     {
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        isGrounded = false; // After jumping, no longer grounded
+        isGrounded = false; // no longer grounded
     }
 
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            isGrounded = true; // Set grounded true on collision with ground
-                               // Play collision sound
+            isGrounded = true; //  on collision with ground
+                               //  collision sound
             if (audioSource != null && groundCollisionSound != null)
             {
                 audioSource.PlayOneShot(groundCollisionSound);
@@ -96,7 +96,7 @@ public class BallMovement : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            isGrounded = false; // Reset grounded on leaving ground
+            isGrounded = false; 
         }
     }
 }
